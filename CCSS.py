@@ -57,8 +57,8 @@ class System:
                 "profile": "study",
                 "price": 60000,
                 "cpu": "Intel Core i5-12400F",
-                "socket": "AM4",
-                "motherboard_socket": "AM4",
+                "socket": "FCLGA1700",
+                "motherboard_socket": "FCLGA1700",
                 "ram_type": "DDR4",
                 "motherboard_ram": "DDR4",
                 "ram_gb": 16,
@@ -299,8 +299,10 @@ class System:
         if build:
             print("Сборка:", build["name"])
             print("Процессор:", build["cpu"])
+            print("Сокет процессора:", build["socket"])
             print("Видеокарта:", build["gpu"])
             print("Оперативная память:", build["ram_gb"], "ГБ")
+            print("Тип оперативной памяти:", build["ram_type"])
             print("Блок питания:", build["power"], "Вт")
             print("Стоимость:", f'{build["price"]:,}'.replace(",", " "), "руб.")
         else:
