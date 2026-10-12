@@ -320,42 +320,92 @@ class System:
             print(f"- {rule_id}: {rule.rule_name}")
 
 
+def get_user_input():
+    print("Как вы хотите ввести бюджет и назначение?")
+    print("1 — Ввести вручную")
+    print("2 - Использовать готовый сценарий")
+    print("3 - Загрузить из файла")
+    while True:
+        option = input("Выберите вариант (1–3): ").strip()
+        if option in ["1", "2", "3"]:
+            break
+        print("Введите 1, 2 или 3.")
+    match option:
+        case "1":
+            while True:
+                try:
+                    budget = int(input("Ваш бюджет в рублях: "))
+                    if budget <= 0:
+                        print("Бюджет должен быть положительным.")
+                        continue
+                    break
+                except ValueError:
+                    print("Введите целое число.")
+
+            print("\nНазначение:")
+            print("1 — Офис")
+            print("2 — Учёба")
+            print("3 — Игры")
+
+            choices = {
+                "1": "офис",
+                "2": "учёба",
+                "3": "игры",
+            }
+
+            while True:
+                choice = input("Выберите вариант (1–3): ").strip()
+                if choice in choices:
+                    break
+                print("Введите 1, 2 или 3.")
+
+            return budget, choices[choice]
+        case "2":
+            print("\nВыберите готовый сценарий:")
+            print("1 — Бюджет 50 000 руб., Назначение: Офис")
+            print("2 — Бюджет 70 000 руб., Назначение: Учёба")
+            print("3 — Бюджет 450 000 руб., Назначение: Игры")
+            while True:
+                choice = input("Выберите вариант (1–3): ").strip()
+                if choice in ["1", "2", "3"]:
+                    break
+                print("Введите 1, 2 или 3.")
+            match choice:
+                case "1":
+                    return 50000, "офис"
+                case "2":
+                    return 70000, "учёба"
+                case "3":
+                    return 450000, "игры"
+        case "3":
+            while True:
+                print("\nВведите путь к файлу (например, input.txt):")
+                path = input("Путь к файлу: ").strip()
+                try:
+                    with open(path, "r", encoding="utf-8") as f:
+                        lines = f.readlines()
+                        budget = int(lines[0].strip())
+                        purpose = lines[1].strip().lower()
+                        if purpose not in ["офис", "учёба", "игры"]:
+                            raise ValueError("Некорректное назначение в файле.")
+                        break
+                except Exception as e:
+                    print(f"Ошибка при чтении файла: {e}")
+                    print("Попробуйте снова.")
+            return budget, purpose
+
+
 # Запуск программы
 
 def main():
     print("СИСТЕМА ПОДБОРА КОМПЬЮТЕРНЫХ КОМПЛЕКТУЮЩИХ")
     print("Укажите бюджет и назначение компьютера.\n")
 
-    while True:
-        try:
-            budget = int(input("Ваш бюджет в рублях: "))
-            if budget <= 0:
-                print("Бюджет должен быть положительным.")
-                continue
-            break
-        except ValueError:
-            print("Введите целое число.")
-
-    print("\nНазначение:")
-    print("1 — Офис")
-    print("2 — Учёба")
-    print("3 — Игры")
-
-    choices = {
-        "1": "офис",
-        "2": "учёба",
-        "3": "игры",
-    }
-
-    while True:
-        choice = input("Выберите вариант (1–3): ").strip()
-        if choice in choices:
-            break
-        print("Введите 1, 2 или 3.")
+    budget, purpose = get_user_input()
 
     system = System()
     system.add_fact("budget", budget)
-    system.add_fact("purpose", choices[choice])
+    system.add_fact("purpose", purpose)
     system.run()
 
 
